@@ -465,4 +465,4 @@ jupyter notebook Banking_EDA_Case_Project.ipynb
 
 ---
 
-*Banking Risk Analytics — Integrated Project | SQL · Python · Power BI | Big 4 Analyst Standard*
+*Banking Risk Analytics — Integrated Project | SQL · Python · Power BI |  
