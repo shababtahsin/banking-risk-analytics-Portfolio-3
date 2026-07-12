@@ -1,6 +1,6 @@
 # Banking Risk Analytics — Integrated Project
 ### SQL · Python EDA · Power BI Dashboard
-#### Big 4 Analyst Standard | Finance Capstone
+ 
 
 ---
 
@@ -353,11 +353,7 @@ Loaded via **Get Data → Text/CSV**. Data types, ID columns, and date formats i
 
 ---
 
-### Phase 6 — Formatting & Navigation
-> ⚠️ **Status: Pending**  
-> Blue theme · Navigation buttons · Card formatting · Chart titles · Top N filters
 
----
 
 ## 8. Key Findings
 
@@ -412,7 +408,7 @@ Banking-Risk-Analytics/
 └── README.md                                    # This file
 ```
 
-> ⚠️ **Missing:** Power BI `.pbix` dashboard file — add to repository to complete the deliverable set.
+ 
 
 ---
 
@@ -449,20 +445,10 @@ jupyter notebook Banking_EDA_Case_Project.ipynb
 
 ---
 
-## 11. Future Work
+ 
+## Author
 
-| Priority | Item |
-|----------|------|
-| 🔴 High | Add `.pbix` file to repository |
-| 🔴 High | Complete EDA insights cell (Cell 23 is empty) |
-| 🔴 High | Expand SQL with aggregation and segmentation queries |
-| 🔴 High | Complete Power BI formatting phase |
-| 🟡 Medium | Row Level Security in Power BI |
-| 🟡 Medium | Publish to Power BI Service with scheduled refresh |
-| 🟡 Medium | Python default prediction model (logistic regression on loan repayment) |
-| 🟢 Low | Add interest rate data for Net Interest Margin analysis |
-| 🟢 Low | Industry benchmark comparisons for Loan to Deposit Ratio |
-
----
+**Shabab Tahsin**  
+Business Data Analyst | SQL · Power BI · Python · Financial & Risk Analytics
 
 *Banking Risk Analytics — Integrated Project | SQL · Python · Power BI |  
