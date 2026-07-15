@@ -19,6 +19,8 @@
 
 ---
 
+
+
 ## 1. Project Overview
 
 This is a full end-to-end integrated banking analytics project spanning three tools and three analytical layers. The project follows Big 4 consulting standards — raw data is first explored in SQL, then subjected to deep statistical analysis in Python, and finally delivered as a 9-page interactive Power BI dashboard covering Risk, Growth, and Profitability.
@@ -28,6 +30,18 @@ The three components are not independent — they are sequential stages of the s
 ```
 SQL (Setup & Exploration) → Python EDA (Statistical Analysis) → Power BI (Interactive Dashboard)
 ```
+
+## Dashboard Preview
+
+### Banking Portfolio Executive Overview
+
+![Banking Portfolio Executive Overview](screenshot/01.home.png)
+
+---
+
+---
+
+
 
 ---
 
@@ -352,7 +366,36 @@ Loaded via **Get Data → Text/CSV**. Data types, ID columns, and date formats i
 | 9 — Summary | Full executive snapshot | 12 KPI cards · Loyalty clustered column · Portfolio donut · Full trend line |
 
 ---
+## Dashboard Gallery
 
+### 1. Executive Banking Portfolio Overview
+![Executive Banking Portfolio Overview](screenshot/01.home.png)
+
+### 2. Loan Portfolio Analysis
+![Loan Portfolio Analysis](screenshot/02.loan_analysis.png)
+
+### 3. Deposit Portfolio Analysis
+![Deposit Portfolio Analysis](screenshot/03.deposit_analysis.png)
+
+### 4. Extended Deposit Analysis
+![Extended Deposit Analysis](screenshot/04.deposit_analysis_2.png)
+
+### 5. Credit Risk Analysis
+![Credit Risk Analysis](<screenshot/05.Risk Analysis.png>)
+
+### 6. Portfolio Growth Analysis
+![Portfolio Growth Analysis](<screenshot/06.Growth Analysis.png>)
+
+### 7. Demographic Growth Analysis
+![Demographic Growth Analysis](<screenshot/07.Growth Analysis 2.png>)
+
+### 8. Revenue & Profitability Analysis
+![Revenue & Profitability Analysis](<screenshot/08.Revenue and profitability.png>)
+
+### 9. Executive Summary Dashboard
+![Executive Summary Dashboard](screenshot/09.Summary.png)
+
+---
 
 
 ## 8. Key Findings
