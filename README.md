@@ -396,8 +396,15 @@ Loaded via **Get Data → Text/CSV**. Data types, ID columns, and date formats i
 ![Executive Summary Dashboard](screenshot/09.Summary.png)
 
 ---
+---
 
+## Power BI Data Model
 
+![Power BI Data Model](screenshot/10_powerbi_data_model.png.png)
+
+---
+
+ 
 ## 8. Key Findings
 
 ### Portfolio Overview
