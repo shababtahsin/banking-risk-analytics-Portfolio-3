@@ -1,249 +1,283 @@
-# Banking Risk Analytics — Integrated Project
-### SQL · Python EDA · Power BI Dashboard
+# 🏦 Banking Portfolio Analytics
 
----
+![MySQL](https://img.shields.io/badge/MySQL-Analysis-blue)
+![Python](https://img.shields.io/badge/Python-EDA-yellow)
+![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-orange)
+![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
 
-## Table of Contents
+## Project Overview
 
-1. [Project Overview](#1-project-overview)
-2. [Business Questions](#2-business-questions)
-3. [Solution Architecture](#3-solution-architecture)
-4. [Dataset](#4-dataset)
-5. [Component 1 — SQL](#5-component-1--sql)
-6. [Component 2 — Python EDA](#6-component-2--python-eda)
-7. [Component 3 — Power BI Dashboard](#7-component-3--power-bi-dashboard)
-8. [Key Findings](#8-key-findings)
-9. [Repository Structure](#9-repository-structure)
-10. [How to Run](#10-how-to-run)
+This project analyses a banking portfolio containing **3,000 clients** using **MySQL, Python and Power BI**.
 
----
+The aim was to understand the portfolio from three connected perspectives:
 
-## 1. Project Overview
+- 📉 **Risk screening**
+- 📈 **Client growth**
+- 💰 **Fee generation**
 
-This project looks at a banking portfolio of **3,000 clients** using three tools:
+The project does not attempt to predict default.
 
-- **MySQL** for database setup and initial exploration
-- **Python** for exploratory data analysis
-- **Power BI** for reporting and interactive analysis
-
-The main goal was to understand the portfolio from three angles:
-
-**risk, growth and profitability.**
+Instead, it uses the available customer, lending, deposit and income data to identify **portfolio concentrations and client groups that may deserve closer review**.
 
 The workflow was:
 
 ```text
-SQL → Python EDA → Power BI
+Banking.csv
+     ↓
+MySQL Analysis
+     ↓
+Python EDA
+     ↓
+Power BI
+     ↓
+Risk · Growth · Fee Analysis
 ```
 
-Each stage had a different purpose. SQL was used to set up and inspect the data, Python was used to explore distributions and relationships, and Power BI was used to bring the results together into a 9-page dashboard.
+---
 
-## Dashboard Preview
+# 🎯 Business Questions
 
-### Banking Portfolio Executive Overview
+The analysis focused on several practical questions:
 
-![Banking Portfolio Executive Overview](screenshot/01.home.png)
+- Which client groups hold the largest lending exposure?
+- How are loans and deposits distributed across the portfolio?
+- Which clients have relatively large lending balances?
+- Which clients have bank loan balances above their bank deposits?
+- Which customer groups are contributing most to client acquisition?
+- How do income, banking relationship and loyalty differ across clients?
+- Which client groups generate the largest estimated fee amounts?
+- Which financial variables move together?
+- How can risk, client growth and fee generation be viewed together?
 
 ---
 
-## 2. Business Questions
+# 📊 Dataset
 
-The project was built around a few practical questions:
+| Attribute | Value |
+|---|---:|
+| Clients | **3,000** |
+| Raw Columns | **25** |
+| Missing Values | **0** |
+| Joining Date Range | **1995–2021** |
+| Age Range | **17–85** |
+| Unique Occupations | **195** |
 
-- Which client groups hold the largest loan exposure?
-- Which clients may be carrying more debt than their deposits can support?
-- Which customer segments are driving portfolio growth?
-- How are deposits and lending distributed across banking relationships?
-- Which client groups generate the most fee revenue?
-- How do income, age, banking relationship and loyalty relate to financial behaviour?
-- Are some customer groups showing signs of higher credit risk?
-
-The aim was not to predict default, but to use the available portfolio data to identify areas that may deserve closer review.
+The dataset contains client demographics, lending balances, deposits, income, banking relationships, loyalty classifications and other banking variables.
 
 ---
 
-## 3. Solution Architecture
+## Main Source Fields
+
+| Area | Fields |
+|---|---|
+| Client | Client ID, Name, Age, Joined Bank |
+| Demographics | Nationality, Gender ID, Occupation |
+| Relationship | BRId, Loyalty Classification, Banking Contact |
+| Income | Estimated Income, Superannuation Savings |
+| Lending | Bank Loans, Business Lending, Credit Card Balance |
+| Deposits | Bank Deposits, Checking Accounts, Saving Accounts, Foreign Currency Account |
+| Other | Fee Structure, Properties Owned, Risk Weighting, IAId, Location ID |
+
+---
+
+# 🛠️ Project Architecture
 
 ```text
-┌─────────────────────────────────────────────────────┐
-│                   Raw Data Source                   │
-│            Banking.csv / Banking01.xlsx             │
-│        3,000 clients · 25 columns · 1999–2021      │
-└──────────────────────┬──────────────────────────────┘
-                       │
-         ┌─────────────┼─────────────┐
-         │             │             │
-         ▼             ▼             ▼
-  ┌────────────┐ ┌────────────┐ ┌────────────────┐
-  │    SQL     │ │   Python   │ │    Power BI    │
-  │            │ │    EDA     │ │    Dashboard   │
-  │ Database   │ │ Profiling  │ │ Power Query    │
-  │ Setup      │ │ Income     │ │ DAX Measures   │
-  │ Initial    │ │ Bands      │ │ 9 Pages        │
-  │ Checks     │ │ Correlation│ │ Risk           │
-  │            │ │ Analysis   │ │ Growth         │
-  │            │ │            │ │ Profitability  │
-  └────────────┘ └────────────┘ └────────────────┘
-         │             │             │
-         └─────────────┴─────────────┘
-                       │
-                       ▼
-          ┌────────────────────────┐
-          │   Business Analysis    │
-          │  Risk · Growth · P&L   │
-          └────────────────────────┘
+┌───────────────────────────────────────┐
+│             Banking.csv               │
+│       3,000 Clients · 25 Fields       │
+└───────────────────┬───────────────────┘
+                    │
+          ┌─────────┼─────────┐
+          │         │         │
+          ▼         ▼         ▼
+       MySQL      Python   Power BI
+          │         │         │
+     Validation     EDA     Reporting
+     Segments    Correlation   DAX
+     Risk Rules  Distributions KPIs
+     Fees        Relationships 9 Pages
+          │         │         │
+          └─────────┴─────────┘
+                    │
+                    ▼
+        Risk · Growth · Fee Analysis
 ```
 
 ---
 
-## 4. Dataset
+# 🗄️ MySQL Analysis
 
-| Attribute | Detail |
-|-----------|--------|
-| File | `Banking.csv` / `Banking01.xlsx` |
-| Rows | 3,000 clients |
-| Columns | 25 raw variables |
-| Date Range | 1999 – 2021 joining dates |
-| Nulls | 0 |
-| Age Range | 17 – 85 years |
-| Unique Occupations | 195 |
+The SQL component performs the main structured portfolio analysis.
 
-### Column Reference
+**File:**
 
-| Column | Type | Description |
-|--------|------|-------------|
-| Client ID | Text | Unique client identifier |
-| Name | Text | Client full name |
-| Age | Integer | Client age |
-| Joined Bank | Date | Date client joined |
-| Nationality | Text | Client nationality group |
-| Occupation | Text | Client occupation |
-| Fee Structure | Text | High / Mid / Low |
-| Loyalty Classification | Text | Jade / Gold / Silver / Platinum |
-| Estimated Income | Decimal | Estimated annual income |
-| Superannuation Savings | Decimal | Retirement savings balance |
-| Amount of Credit Cards | Integer | Number of credit cards held |
-| Credit Card Balance | Decimal | Credit card balance |
-| Bank Loans | Decimal | Outstanding bank loan balance |
-| Bank Deposits | Decimal | Total bank deposit balance |
-| Checking Accounts | Decimal | Checking account balance |
-| Saving Accounts | Decimal | Savings account balance |
-| Foreign Currency Account | Decimal | Foreign currency account balance |
-| Business Lending | Decimal | Business lending balance |
-| Properties Owned | Integer | Number of properties owned |
-| Risk Weighting | Integer | Internal risk indicator |
-| BRId | Integer | Banking Relationship ID |
-| GenderId | Integer | Gender ID |
-| IAId | Integer | Investment Advisor ID |
-
-### ID Mappings
-
-| Column | Values |
-|--------|--------|
-| BRId | 1 = Premium · 2 = Business · 3 = Personal · 4 = SME |
-| GenderId | 1 = Male · 2 = Female |
-| Fee Structure | High = 0.05 · Mid = 0.03 · Low = 0.01 |
-| Loyalty | Jade · Gold · Silver · Platinum |
-
----
-
-## 5. Component 1 — SQL
-
-**File:** `Banking_analysis_sql.sql`  
-**Tool:** MySQL  
-**Purpose:** Database setup and initial data checks
-
-### What Was Done
-
-The SQL stage was used to create the database environment and confirm that the data loaded correctly before moving into Python and Power BI.
-
-```sql
-CREATE DATABASE banking_case;
-
-USE banking_case;
-
-SHOW TABLES;
-
-SELECT * FROM customer;
-
-SHOW VARIABLES WHERE Variable_name = 'hostname';
-
-SELECT current_user();
+```text
+sql/Banking_Complete_SQL_analysis.sql
 ```
 
-### What This Stage Covers
+The script covers:
 
-- creates a separate project database
-- checks that the customer table loaded correctly
-- verifies the active database environment
-- performs an initial review of the imported data
-- records basic environment information for reproducibility
-
-The deeper analytical work in this project was carried out in Python and Power BI.
+1. Database and table setup
+2. Data quality checks
+3. Feature engineering
+4. Client segmentation
+5. Loan analysis
+6. Deposit analysis
+7. Portfolio screening indicators
+8. Client acquisition and cohort analysis
+9. Estimated fee analysis
+10. Reusable SQL views
+11. Executive portfolio summary
 
 ---
 
-## 6. Component 2 — Python EDA
+## Data Quality Checks
 
-**File:** `Banking_EDA_Case_Project.ipynb`  
-**Tool:** Python  
-**Libraries:** pandas, matplotlib, seaborn, numpy
+The SQL stage validates:
 
-The Python stage was used to understand the dataset before building the dashboard.
+- row count
+- missing values
+- duplicate Client IDs
+- categorical values
+- numerical ranges
+- joining-date range
 
-### Libraries Used
+The source contains **3,000 unique client records with no missing values**.
+
+---
+
+# 🧩 Feature Engineering
+
+Several analytical fields were created from the raw data.
+
+### Income Bands
+
+| Income Band | Rule | Clients |
+|---|---|---:|
+| Low | < $100,000 | **1,027** |
+| Mid | $100,000–$299,999 | **1,517** |
+| High | ≥ $300,000 | **456** |
+
+---
+
+### Banking Relationship
+
+`BRId` was translated into readable relationship groups:
+
+| BRId | Relationship |
+|---|---|
+| 1 | Premium |
+| 2 | Business |
+| 3 | Personal |
+| 4 | SME |
+
+Personal Banking was the largest group with **1,352 clients**.
+
+---
+
+### Gender
+
+| Gender | Clients |
+|---|---:|
+| Male | **1,488** |
+| Female | **1,512** |
+
+The portfolio is therefore almost evenly split by gender.
+
+---
+
+### Fee Structure
+
+For this project, an analytical fee-rate assumption was assigned to each source fee tier:
+
+| Fee Structure | Assumed Rate |
+|---|---:|
+| High | 5% |
+| Mid | 3% |
+| Low | 1% |
+
+> These percentages are **project assumptions used to estimate fee amounts**. They are not actual realised revenue supplied by the dataset.
+
+---
+
+# 💳 Lending & Deposit Definitions
+
+To analyse the portfolio consistently, composite balances were created.
+
+### Total Loan Exposure
+
+```text
+Bank Loans
++ Business Lending
++ Credit Card Balance
+```
+
+Result:
+
+**≈ $4.38B**
+
+---
+
+### Total Deposits
+
+```text
+Bank Deposits
++ Saving Accounts
++ Checking Accounts
++ Foreign Currency Account
+```
+
+Result:
+
+**≈ $3.77B**
+
+---
+
+### Loan-to-Deposit Ratio
+
+```text
+Total Loan Exposure ÷ Total Deposits
+```
+
+Result:
+
+**1.16**
+
+This means the calculated lending exposure in the dataset is approximately **16% higher than the calculated deposit balance**.
+
+It is a portfolio comparison metric rather than a prediction of default.
+
+---
+
+# 🐍 Python Exploratory Data Analysis
+
+Python was used to understand the portfolio before building the Power BI report.
+
+Main libraries included:
 
 ```python
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
+pandas
+numpy
+matplotlib
+seaborn
 ```
 
-### Data Loading & Profiling
+The EDA focused on:
 
-```python
-df = pd.read_excel('/content/Banking01.xlsx')
-
-df.head(5)
-df.shape
-df.info()
-df.describe()
-```
-
-This confirmed a dataset containing **3,000 rows and 25 columns** with no missing values.
+- categorical distributions
+- income segmentation
+- lending distributions
+- deposit distributions
+- demographic comparisons
+- correlation analysis
+- selected variable-pair analysis
 
 ---
 
-### Step 1 — Income Bands
+## Categorical Analysis
 
-Estimated income was grouped into three broad segments:
-
-```python
-bins = [0, 100000, 300000, float('inf')]
-labels = ['Low', 'Mid', 'High']
-
-df['Income Band'] = pd.cut(
-    df['Estimated Income'],
-    bins=bins,
-    labels=labels,
-    right=False
-)
-```
-
-| Band | Income Range | Clients |
-|------|-------------|---------|
-| Low | < $100,000 | 287 |
-| Mid | $100,000 – $300,000 | 1,835 |
-| High | > $300,000 | 878 |
-
-These bands were later reused in Power BI.
-
----
-
-### Step 2 — Categorical Analysis
-
-I reviewed the main categorical fields, including:
+The analysis reviewed:
 
 - Banking Relationship
 - Gender
@@ -252,451 +286,684 @@ I reviewed the main categorical fields, including:
 - Loyalty Classification
 - Income Band
 
-Some early observations were:
+Some basic observations were:
 
-- Personal Banking was the largest relationship group
-- Gender was close to evenly split
-- High Fee Structure was the most common fee tier
-- Jade was the largest loyalty group
-
----
-
-### Step 3 — Gender Comparison
-
-Categorical distributions were also compared by gender.
-
-The purpose was to check whether banking relationship, loyalty, fee structure or income bands differed noticeably between male and female clients.
-
-This later supported the gender filters used in Power BI.
+- **Personal Banking** was the largest relationship group
+- gender was almost evenly split
+- **High** was the most common fee structure
+- **Jade** was the largest loyalty classification
 
 ---
 
-### Step 4 — Nationality Comparison
+# 🔗 Correlation Analysis
 
-The same approach was used to compare categories across nationality groups.
+The numerical EDA explored relationships between variables such as:
 
-This helped identify differences in:
+- Estimated Income
+- Bank Loans
+- Business Lending
+- Bank Deposits
+- Checking Accounts
+- Saving Accounts
+- Superannuation Savings
+- Credit Card Balance
+- Age
 
+### Main Relationships
+
+| Variables | Approx. Correlation | Interpretation |
+|---|---:|---|
+| Bank Deposits ↔ Checking Accounts | **0.84** | Strong positive relationship |
+| Bank Deposits ↔ Saving Accounts | **0.75** | Strong positive relationship |
+| Business Lending ↔ Bank Loans | **0.42** | Moderate positive relationship |
+| Checking ↔ Saving Accounts | **0.46** | Moderate positive relationship |
+| Bank Loans ↔ Credit Card Balance | **0.37** | Weak-to-moderate positive relationship |
+| Age ↔ Superannuation Savings | **-0.02** | Essentially no linear relationship |
+
+These results describe relationships in this dataset only.
+
+They should **not be interpreted as proof of cause and effect**.
+
+---
+
+# ⚠️ Portfolio Screening Indicators
+
+The dataset does not contain actual default outcomes.
+
+For that reason, this project uses simple **screening rules** rather than claiming to identify actual default risk.
+
+---
+
+## Above-Average Bank Loan Balance Clients
+
+A client is flagged when:
+
+```text
+Bank Loans > Portfolio Average Bank Loan Balance
+```
+
+Using this rule:
+
+**1,205 clients** have above-average bank loan balances.
+
+This is a balance-concentration indicator, not a credit-risk classification.
+
+---
+
+## Clients With Bank Loans Above Bank Deposits
+
+A second screening rule compares:
+
+```text
+Bank Loans > Bank Deposits
+```
+
+Using this definition:
+
+**1,506 clients** have bank loan balances above their bank deposit balances.
+
+This may identify clients worth examining further, but it should not be interpreted as proof that those clients are financially overleveraged.
+
+---
+
+## High-Loan / Low-Income Screening
+
+The project also identifies clients where:
+
+```text
+Estimated Income < $100,000
+AND
+Bank Loans > Portfolio Average Bank Loan Balance
+```
+
+Using this rule:
+
+**269 clients** meet both conditions.
+
+This group may warrant closer review because relatively high bank loan balances are combined with lower estimated income.
+
+Again, this is a **screening indicator rather than a default prediction**.
+
+---
+
+# 📈 Client Growth Analysis
+
+The `Joined Bank` field makes it possible to analyse **client acquisition over time**.
+
+The strongest year for new-client additions was:
+
+**2020 — 248 new clients**
+
+The analysis also compares new-client acquisition by:
+
+- nationality
+- loyalty classification
 - banking relationship
-- loyalty
-- fee structure
 - income band
-
-These fields were later used in the loan and deposit dashboard pages.
-
----
-
-### Step 5 — Numerical Distributions
-
-Numerical variables were reviewed using histograms and KDE plots.
-
-Main observations included:
-
-- Bank Loans and Business Lending were right-skewed
-- most clients had smaller balances, with a smaller group of very large balances
-- Estimated Income was spread across a broad range
-- Credit Card Balance was concentrated toward lower values
-- Checking and Saving Accounts had similar distribution shapes
+- gender
 
 ---
 
-### Step 6 — Correlation Analysis
+## Important Growth Interpretation
 
-```python
-numerical_cols = [
-    'Age',
-    'Estimated Income',
-    'Superannuation Savings',
-    'Credit Card Balance',
-    'Bank Loans',
-    'Bank Deposits',
-    'Checking Accounts',
-    'Saving Accounts',
-    'Foreign Currency Account',
-    'Business Lending',
-    'Properties Owned'
-]
+The dataset contains each client's current financial balances and their original bank joining date.
 
-correlation_matrix = df[numerical_cols].corr()
+Therefore:
 
-sns.heatmap(
-    correlation_matrix,
-    annot=True,
-    cmap='coolwarm',
-    fmt=".2f"
-)
-```
+✅ **Client counts by joining year represent real client-acquisition cohorts.**
 
-### Main Relationships Observed
+However:
 
-- Bank Deposits and Checking Accounts showed a strong positive relationship
-- Business Lending and Bank Loans showed a moderate positive relationship
-- Age and Superannuation Savings were positively related
-- Credit Card Balance showed relatively weak relationships with most other financial variables
+❌ Current loan balances grouped by joining year do **not** represent historical annual loan growth.
 
-These relationships were used as starting points for further analysis rather than treated as proof of causation.
+❌ Current deposit balances grouped by joining year do **not** represent historical annual deposit growth.
+
+Those analyses should instead be interpreted as:
+
+> **Current portfolio balances by client joining cohort.**
+
+This distinction avoids treating today's account balances as historical balances.
 
 ---
 
-### Step 7 — Variable Pair Analysis
+# 💰 Estimated Fee Analysis
 
-Several variable pairs were selected for closer inspection:
-
-```python
-pairs_to_plot = [
-    ('Bank Deposits', 'Saving Accounts'),
-    ('Checking Accounts', 'Saving Accounts'),
-    ('Checking Accounts', 'Foreign Currency Account'),
-    ('Age', 'Superannuation Savings'),
-    ('Estimated Income', 'Checking Accounts'),
-    ('Bank Loans', 'Credit Card Balance'),
-    ('Business Lending', 'Bank Loans'),
-]
-```
-
-| Pair | Reason for Checking |
-|------|---------------------|
-| Bank Deposits vs Saving Accounts | See how much savings balances contribute to deposits |
-| Checking vs Saving Accounts | Compare short-term liquidity with savings balances |
-| Checking vs Foreign Currency | Look for clients with broader banking activity |
-| Age vs Superannuation | Check whether retirement savings generally rise with age |
-| Income vs Checking Accounts | Compare income with transactional balances |
-| Bank Loans vs CC Balance | Look at combined debt exposure |
-| Business Lending vs Bank Loans | Identify clients carrying both business and personal lending |
-
----
-
-## 7. Component 3 — Power BI Dashboard
-
-**Tool:** Power BI Desktop  
-**Pages:** 9  
-**Main areas:** Risk · Growth · Profitability
-
----
-
-### Phase 1 — Data Loading
-
-The CSV file was loaded into Power BI and checked before modelling.
-
-The main checks included:
-
-- data types
-- ID columns
-- dates
-- numerical fields
-- categorical fields
-
----
-
-### Phase 2 — Power Query
-
-Several useful columns were created before loading the model.
-
-| Column | Logic |
-|--------|-------|
-| Age Band | 18–30 / 31–45 / 46–60 / 61+ |
-| Income Band | Low / Mid / High |
-| Processing Fees | High = 0.05 / Mid = 0.03 / Low = 0.01 |
-| Engagement Days | Days since joining |
-| Engagement Timeframe | <1yr / 1–5yr / 5–10yr / 10+yr |
-| Year | Extracted from Joined Bank |
-| Gender | Mapped from GenderId |
-| Banking Relationship | Mapped from BRId |
-
-**Columns removed:** Location ID · Banking Contact · Risk Weighting
-
----
-
-### Phase 3 — Data Model
-
-A Date Table covering 1995–2021 was created in DAX and marked as the official date table.
-
-The main relationship was:
+Fee amounts were estimated using:
 
 ```text
-Date Table[Date] → Banking[Joined Bank]
+Total Loan Exposure × Assigned Fee Rate
 ```
 
-Relationship type:
+where:
 
 ```text
-One-to-Many
-Single Filter Direction
+High = 5%
+Mid  = 3%
+Low  = 1%
 ```
 
----
+Using this project assumption:
 
-### Phase 4 — DAX Measures
+| Metric | Result |
+|---|---:|
+| Estimated Total Fees | **$158.19M** |
+| Estimated Avg Fee per Client | **$52,731** |
 
-The report uses DAX measures covering portfolio size, deposits, lending, growth, fees and risk.
+These figures are **analytical fee estimates**, not audited or realised bank revenue.
 
-### Base Measures
-
-- Total Clients
-- Bank Loan Amount
-- Business Lending Amount
-- Credit Cards Balance
-- Total Bank Deposit
-- Total Checking Accounts
-- Total Saving Account
-- Foreign Currency Amount
-- Engagement Length
-- Total CC Amount
-
-### Composite Measures
-
-- Total Loan
-- Total Deposit
-- Total Fees
-
-### Ratios
-
-- Avg Loan Per Client
-- Avg Deposit Per Client
-- Loan to Deposit Ratio
-- Avg Fee Per Client
-- Revenue per Loan
-- Loan Concentration %
-- Fee Concentration %
-
-### Time Intelligence
-
-- YoY Loan Growth
-- YoY Deposit Growth
-- YoY Client Growth
-- Cumulative Clients
-- Growth Rate %
-
-### Risk Measures
-
-- High Risk Loan Clients
-- Overleveraged Clients
-- Credit Risk Ratio
-- High Loan Low Income Count
-- High Income Clients
-- Avg Loan by Income Band
+They are useful for comparing relative fee-generation potential across customer groups.
 
 ---
 
-### Phase 5 — Dashboard Pages
+## Fee Analysis Dimensions
 
-| Page | Purpose | Key Visuals |
-|------|---------|-------------|
-| 1 — Home | Portfolio overview | KPI cards · Client acquisition · Banking Relationship · Loyalty · Nationality |
-| 2 — Loan Analysis | Loan portfolio breakdown | Loan by relationship · nationality · income · occupation · trend |
-| 3 — Deposit Analysis | Deposit portfolio | Deposit by relationship · gender · fee structure · nationality · occupation |
-| 4 — Deposit Analysis 2 | Extended deposit analysis | Loyalty · loan vs deposit · age · engagement |
-| 5 — Risk Analysis | Risk indicators | Loan concentration · LDR · CC balances · High Loan Low Income · engagement |
-| 6 — Growth Analysis | Portfolio growth | Cumulative clients · YoY growth · nationality · age · income |
-| 7 — Growth Analysis 2 | Demographic growth | Income band · gender · loyalty |
-| 8 — Revenue & Profitability | Fee analysis | Fees by relationship · loyalty · income · nationality · trend |
-| 9 — Summary | Executive summary | KPI cards · loyalty · portfolio mix · trend |
-
----
-
-## Dashboard Gallery
-
-### 1. Executive Banking Portfolio Overview
-
-![Executive Banking Portfolio Overview](screenshot/01.home.png)
-
-### 2. Loan Portfolio Analysis
-
-![Loan Portfolio Analysis](screenshot/02.loan_analysis.png)
-
-### 3. Deposit Portfolio Analysis
-
-![Deposit Portfolio Analysis](screenshot/03.deposit_analysis.png)
-
-### 4. Extended Deposit Analysis
-
-![Extended Deposit Analysis](screenshot/04.deposit_analysis_2.png)
-
-### 5. Credit Risk Analysis
-
-![Credit Risk Analysis](<screenshot/05.Risk Analysis.png>)
-
-### 6. Portfolio Growth Analysis
-
-![Portfolio Growth Analysis](<screenshot/06.Growth Analysis.png>)
-
-### 7. Demographic Growth Analysis
-
-![Demographic Growth Analysis](<screenshot/07.Growth Analysis 2.png>)
-
-### 8. Revenue & Profitability Analysis
-
-![Revenue & Profitability Analysis](<screenshot/08.Revenue and profitability.png>)
-
-### 9. Executive Summary Dashboard
-
-![Executive Summary Dashboard](screenshot/09.Summary.png)
-
----
-
-## Power BI Data Model
-
-![Power BI Data Model](screenshot/10_powerbi_data_model.png.png)
-
----
-
-## 8. Key Findings
-
-### Portfolio Overview
-
-| Metric | Value |
-|--------|-------|
-| Total Clients | 3,000 |
-| Total Loan Exposure | $4.38 billion |
-| Total Deposits | $3.77 billion |
-| Business Lending | $2.60 billion |
-| Total Fee Revenue | $158.19 million |
-| Avg Fee Per Client | $52,730 |
-| Loan to Deposit Ratio | 1.16 |
-| High Risk Loan Clients | 1,197 |
-| Overleveraged Clients | 1,496 |
-
----
-
-### Risk
-
-The portfolio has a **Loan-to-Deposit Ratio of 1.16**, meaning total lending is higher than total deposits in the dataset.
-
-Around **1,496 clients** have loan balances above their deposit balances under the rule used in this project.
-
-The **High Loan / Low Income** segment is another group worth monitoring because these clients combine larger borrowing with lower estimated income.
-
-These are portfolio screening indicators rather than predictions of default.
-
----
-
-### Growth
-
-Client acquisition increased strongly toward the later years of the dataset.
-
-The largest year for new clients was **2020**, with 248 additions.
-
-Personal Banking was the largest relationship group, with **1,352 clients**.
-
-The gender split was close to even in both the Python analysis and the Power BI dashboard.
-
----
-
-### Profitability
-
-Fee revenue was strongly influenced by the client's assigned fee structure.
-
-Clients in the High fee tier generated more fee revenue by design because the percentage charged to them was higher.
-
-Across the dataset, total calculated fees were approximately **$158.19M**.
-
-The dashboard allows fee performance to be compared by:
+Estimated fees can be compared by:
 
 - banking relationship
-- loyalty level
+- loyalty classification
 - income band
 - fee structure
 - nationality
+- client joining cohort
+
+This helps identify where estimated fee generation is concentrated within the portfolio.
 
 ---
 
-### Python EDA Findings
+# 📊 Key Portfolio Metrics
 
-- Bank Deposits and Checking Accounts showed a strong positive relationship
-- Business Lending and Bank Loans showed a moderate positive relationship
-- Age and Superannuation Savings were positively related, which is consistent with older clients having larger retirement balances
-- Credit Card Balance had relatively weak relationships with most other financial variables
-
-These patterns describe relationships in the dataset and should not be interpreted as proof of cause and effect.
-
----
-
-## Main Takeaway
-
-The project shows that banking performance cannot be understood from a single metric.
-
-A client may:
-
-- hold large deposits but also large loans
-- generate strong fee revenue but carry significant exposure
-- belong to a fast-growing customer group without necessarily being low risk
-
-Looking at **risk, growth and profitability together** gives a much more useful picture of the portfolio.
-
-The Power BI report was built to let users move between these different views rather than relying only on overall totals.
+| Metric | Result |
+|---|---:|
+| 👥 Total Clients | **3,000** |
+| 💳 Total Loan Exposure | **$4.38B** |
+| 🏦 Total Deposits | **$3.77B** |
+| 🏢 Business Lending | **$2.60B** |
+| ⚖️ Loan-to-Deposit Ratio | **1.16** |
+| 💰 Estimated Fee Amount | **$158.19M** |
+| 💵 Avg Estimated Fee / Client | **$52,731** |
+| 📊 Above-Average Bank Loan Clients | **1,205** |
+| 🔎 Bank Loans Above Bank Deposits | **1,506** |
+| ⚠️ High-Loan / Low-Income Clients | **269** |
+| 📈 Largest Acquisition Year | **2020 — 248 clients** |
+| 👤 Personal Banking Clients | **1,352** |
 
 ---
 
-## 9. Repository Structure
+# 📊 Power BI Report
+
+The Power BI report contains **9 pages** covering lending, deposits, client acquisition, screening indicators and estimated fee analysis.
+
+---
+
+## 1. Banking Portfolio Overview
+
+![Banking Portfolio Executive Overview](screenshot/01.home.png)
+
+Provides a high-level view of:
+
+- client count
+- lending
+- deposits
+- banking relationships
+- loyalty groups
+- nationality
+- client acquisition
+
+---
+
+## 2. Loan Portfolio Analysis
+
+![Loan Portfolio Analysis](screenshot/02.loan_analysis.png)
+
+Explores lending across:
+
+- banking relationship
+- nationality
+- income group
+- occupation
+- customer segment
+
+---
+
+## 3. Deposit Portfolio Analysis
+
+![Deposit Portfolio Analysis](screenshot/03.deposit_analysis.png)
+
+Analyses deposit balances by:
+
+- banking relationship
+- gender
+- fee structure
+- nationality
+- occupation
+
+---
+
+## 4. Extended Deposit Analysis
+
+![Extended Deposit Analysis](screenshot/04.deposit_analysis_2.png)
+
+Provides additional deposit comparisons across:
+
+- loyalty
+- age
+- engagement
+- lending balances
+- customer groups
+
+---
+
+## 5. Portfolio Screening Analysis
+
+![Credit Risk Analysis](<screenshot/05.Risk Analysis.png>)
+
+This page uses project-defined indicators to highlight:
+
+- lending concentration
+- loan-to-deposit ratio
+- credit card exposure
+- above-average bank loan balances
+- high-loan / low-income clients
+
+These indicators are designed for **portfolio screening**, not default prediction.
+
+---
+
+## 6. Client Growth Analysis
+
+![Portfolio Growth Analysis](<screenshot/06.Growth Analysis.png>)
+
+Analyses:
+
+- new clients by year
+- cumulative client acquisition
+- nationality
+- age
+- income group
+
+---
+
+## 7. Demographic Growth Analysis
+
+![Demographic Growth Analysis](<screenshot/07.Growth Analysis 2.png>)
+
+Extends client-acquisition analysis across:
+
+- gender
+- loyalty
+- income bands
+- customer groups
+
+---
+
+## 8. Estimated Fee Analysis
+
+![Revenue and Fee Analysis](<screenshot/08.Revenue and profitability.png>)
+
+Analyses estimated fee amounts by:
+
+- banking relationship
+- loyalty
+- income
+- nationality
+- fee structure
+- client joining cohort
+
+The values shown are based on the project's **5% / 3% / 1% fee-rate assumptions**.
+
+---
+
+## 9. Executive Summary
+
+![Executive Summary Dashboard](screenshot/09.Summary.png)
+
+The final page brings the portfolio metrics together into one view covering:
+
+- clients
+- lending
+- deposits
+- portfolio screening
+- customer mix
+- estimated fees
+- acquisition patterns
+
+---
+
+# 🧱 Power BI Data Model
+
+![Power BI Data Model](screenshot/10_powerbi_data_model.png.png)
+
+The model includes the main banking dataset and a Date Table connected through:
 
 ```text
-Banking-Risk-Analytics/
+Date Table[Date]
+        ↓
+Banking[Joined Bank]
+```
+
+The date relationship supports client-acquisition analysis based on the date each customer joined the bank.
+
+---
+
+# 🧮 Power BI Measures
+
+The report contains measures covering several analytical areas.
+
+### Lending
+
+```text
+Bank Loan Amount
+Business Lending Amount
+Credit Card Balance
+Total Loan
+Avg Loan Per Client
+Loan Concentration %
+```
+
+### Deposits
+
+```text
+Total Bank Deposit
+Total Checking Accounts
+Total Saving Accounts
+Foreign Currency Amount
+Total Deposit
+Avg Deposit Per Client
+```
+
+### Portfolio Indicators
+
+```text
+Loan to Deposit Ratio
+Above-Average Loan Balance Clients
+Clients With Bank Loans Above Deposits
+High Loan Low Income Count
+```
+
+### Client Acquisition
+
+```text
+Total Clients
+New Clients
+Cumulative Clients
+Client Growth %
+```
+
+### Estimated Fees
+
+```text
+Estimated Total Fees
+Avg Estimated Fee Per Client
+Estimated Fee Concentration %
+Estimated Fee Per Loan
+```
+
+---
+
+# 🗃️ SQL Views
+
+The MySQL analysis also creates reusable views.
+
+| View | Purpose |
+|---|---|
+| `vw_banking_master` | Main analytical dataset with derived client fields |
+| `vw_risk_summary` | Portfolio screening fields and lending/deposit comparisons |
+| `vw_profitability` | Estimated fee calculations and customer segmentation |
+
+> The third view is named `vw_profitability` in the current SQL file, although its values represent **estimated fee amounts rather than true accounting profitability**.
+
+---
+
+# 💡 Key Findings
+
+## 🟢 1. Lending Exceeds Calculated Deposits
+
+The portfolio contains approximately:
+
+- **$4.38B in total calculated loan exposure**
+- **$3.77B in calculated deposits**
+
+This produces a loan-to-deposit ratio of approximately **1.16**.
+
+The ratio provides a useful portfolio-level comparison between the lending and deposit balances represented in the dataset.
+
+---
+
+## 🟠 2. A Large Number of Clients Carry Substantial Bank Loan Balances
+
+Approximately **1,205 clients** have bank loan balances above the portfolio average.
+
+This does not mean they are default risks.
+
+It indicates that lending exposure is distributed across a sizeable group of relatively high-balance borrowers.
+
+---
+
+## 🔎 3. Bank Loan Balances Exceed Bank Deposits for Many Clients
+
+Around **1,506 clients** have:
+
+```text
+Bank Loans > Bank Deposits
+```
+
+This is a useful screening condition for identifying clients that may deserve closer balance-sheet review.
+
+It is not a complete measure of financial leverage because the dataset contains other assets, deposits, income and financial relationships.
+
+---
+
+## ⚠️ 4. High-Loan / Low-Income Clients Form a Smaller Review Group
+
+Approximately **269 clients** combine:
+
+- estimated income below **$100K**
+- bank loan balances above the portfolio average
+
+This creates a narrower group that may be worth reviewing alongside other financial indicators.
+
+---
+
+## 📈 5. Client Acquisition Was Strongest in 2020
+
+The largest single joining cohort was:
+
+**2020 — 248 clients**
+
+The joining-date analysis helps show how the client base developed over time.
+
+---
+
+## 👤 6. Personal Banking Is the Largest Relationship Group
+
+Personal Banking contains **1,352 clients**, making it the largest banking-relationship category in the dataset.
+
+---
+
+## 💰 7. Estimated Fee Generation Is Concentrated by Loan Balance and Fee Tier
+
+Using the project fee assumptions, calculated fee amounts total approximately **$158.19M**.
+
+Because the calculation depends on both:
+
+- lending balance
+- assigned fee tier
+
+clients with large lending balances and higher assumed fee rates naturally generate larger estimated fee amounts.
+
+This is therefore an analytical fee model rather than observed profitability.
+
+---
+
+## 🔗 8. Several Financial Variables Move Together
+
+Python EDA found that:
+
+- Bank Deposits and Checking Accounts have a **strong positive relationship**
+- Bank Deposits and Saving Accounts also move strongly together
+- Business Lending and Bank Loans have a **moderate positive relationship**
+- Age and Superannuation Savings show **almost no linear relationship** in this dataset
+
+These relationships help describe portfolio behaviour but do not establish causation.
+
+---
+
+# 🎯 Main Business Takeaway
+
+The main lesson from this project is that a banking portfolio cannot be understood from one KPI alone.
+
+A client can have:
+
+- large loans
+- large deposits
+- high estimated income
+- significant business lending
+- high estimated fee generation
+
+at the same time.
+
+For that reason, the report combines **lending exposure, deposits, customer segmentation, client acquisition and fee estimates** instead of treating them separately.
+
+The project provides a way to identify where portfolio balances are concentrated and which customer groups may deserve additional analysis.
+
+---
+
+# 📁 Repository Structure
+
+```text
+banking-risk-analytics-Portfolio-3/
 │
 ├── Banking.csv
-├── Banking_EDA_Case_Project.ipynb
-├── Banking_analysis_sql.sql
-├── Banking_Report.docx
-├── Banking_Solution_Dashboard_Project.docx
-├── Banking.pptx
-└── README.md
+├── README.md
+├── LICENSE
+│
+├── sql/
+│   └── Banking_Complete_SQL_analysis.sql
+│
+├── python/
+│   └── banking_eda.ipynb.ipynb
+│
+├── powerbi/
+│   └── Banking Analysis Dashboard Shabab new.pbix
+│
+├── reports/
+│   └── Banking_Analytics_Report.docx
+│
+└── screenshot/
+    ├── 01.home.png
+    ├── 02.loan_analysis.png
+    ├── 03.deposit_analysis.png
+    ├── 04.deposit_analysis_2.png
+    ├── 05.Risk Analysis.png
+    ├── 06.Growth Analysis.png
+    ├── 07.Growth Analysis 2.png
+    ├── 08.Revenue and profitability.png
+    ├── 09.Summary.png
+    └── 10_powerbi_data_model.png.png
 ```
 
 ---
 
-## 10. How to Run
+# ▶️ How to Run
 
-### SQL
+## MySQL
 
-Run the following in MySQL Workbench:
-
-```sql
-CREATE DATABASE banking_case;
-
-USE banking_case;
-```
-
-Import `Banking.csv` into the database and use the included SQL file for the setup and exploration steps.
-
----
-
-### Python EDA
-
-For Google Colab:
+Run:
 
 ```text
-Upload Banking01.xlsx
-Open Banking_EDA_Case_Project.ipynb
-Run the notebook from top to bottom
+sql/Banking_Complete_SQL_analysis.sql
 ```
 
-For local Jupyter:
+The script creates the project database and banking table.
+
+The CSV import section contains a `LOAD DATA INFILE` template that may need to be updated for the local MySQL secure-file path.
+
+---
+
+## Python
+
+Open:
+
+```text
+python/banking_eda.ipynb.ipynb
+```
+
+The notebook performs exploratory analysis of the banking data.
+
+Required libraries include:
 
 ```bash
-pip install pandas matplotlib seaborn numpy openpyxl
-
-jupyter notebook Banking_EDA_Case_Project.ipynb
+pip install pandas numpy matplotlib seaborn
 ```
 
 ---
 
-### Power BI
+## Power BI
 
-1. Open Power BI Desktop.
-2. Select **Get Data → Text/CSV**.
-3. Load `Banking.csv`.
-4. Open **Transform Data**.
-5. Apply the Power Query transformations.
-6. Create the Date Table and relationship.
-7. Add the DAX measures.
-8. Build or review the nine dashboard pages.
+Open the PBIX file inside:
 
-> **Note:** Year-over-year measures require year context from the Date Table. Without a selected year, there is no prior-year period to compare against.
+```text
+powerbi/
+```
+
+If the local data-source path differs, update it through:
+
+```text
+Transform Data → Data Source Settings
+```
+
+Then refresh the report.
 
 ---
 
-## Author
+# 🛠️ Tools & Skills
+
+| Tool | Purpose |
+|---|---|
+| **MySQL** | Data validation, segmentation, lending, deposits and portfolio analysis |
+| **Python** | EDA, distributions and correlation analysis |
+| **Power BI** | Data modelling, DAX and interactive reporting |
+| **Power Query** | Data preparation and derived fields |
+| **DAX** | KPI calculations and dashboard measures |
+
+### Skills Demonstrated
+
+**SQL**  
+Data Profiling · CASE · Aggregation · Segmentation · Subqueries · Window Functions · Views · Cohort Analysis
+
+**Python**  
+pandas · EDA · Data Profiling · Segmentation · Correlation · Visualisation
+
+**Power BI**  
+Data Modelling · Power Query · DAX · KPI Design · Slicers · Interactive Reporting
+
+**Business Analysis**  
+Portfolio Analysis · Client Segmentation · Risk Screening · Customer Growth · Fee Analysis
+
+---
+
+# 📌 Overall Conclusion
+
+The analysis found that the portfolio contains approximately **$4.38B in calculated lending exposure and $3.77B in deposits**, with meaningful variation across customer groups.
+
+The project also identified:
+
+- **1,205 clients** with above-average bank loan balances
+- **1,506 clients** whose bank loans exceed their bank deposits
+- **269 clients** combining lower estimated income with above-average bank loan balances
+- **2020** as the strongest client-acquisition year
+- **Personal Banking** as the largest relationship group
+- approximately **$158.19M in estimated fee amounts** under the project's fee-rate assumptions
+
+The main conclusion is that **risk screening, client growth and fee generation need to be considered together to understand the portfolio properly**.
+
+The resulting Power BI report brings these areas into one reporting environment so that users can move from overall KPIs into specific client and portfolio segments.
+
+---
+
+## 👤 Author
 
 **Shah Tahsin**  
-Business Data Analyst | SQL · Python · Power BI · Financial & Risk Analytics
+Business Data Analyst | SQL · Python · Power BI
 
 [GitHub](https://github.com/shababtahsin)
